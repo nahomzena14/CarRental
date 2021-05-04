@@ -14,9 +14,14 @@ import java.util.List;
 public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
 
     List<Car> cars;
+    interface CarDelegate{
+        void updateCarAvailability(Car car);
+    }
+    private CarAdapter.CarDelegate carDelegate;
 
-    public CarAdapter(List<Car> cars) {
+    public CarAdapter(List<Car> cars,CarDelegate carDelegate) {
         this.cars = cars;
+        this.carDelegate = carDelegate;
     }
 
     @NonNull
@@ -45,6 +50,9 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
         holder.binding.priceTextView.setText("Price:"+car.getPrice()+"/day");
         holder.binding.tagTextView.setText("Tag:"+car.getLicenseTag());
         holder.binding.availableTextView.setText("Available = "+car.isAvailable());
+        holder.binding.updateButton.setOnClickListener(v ->{
+            carDelegate.updateCarAvailability(car);
+        });
     }
 
     @Override

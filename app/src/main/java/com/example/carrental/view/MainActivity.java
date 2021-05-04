@@ -13,7 +13,7 @@ import com.example.carrental.model.db.CarDatabase;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements InputFragment.CarDelegate {
+public class MainActivity extends AppCompatActivity implements InputFragment.CarDelegate,CarAdapter.CarDelegate {
 
     private CarDatabase database;
     private InputFragment inputFragment;
@@ -41,8 +41,6 @@ public class MainActivity extends AppCompatActivity implements InputFragment.Car
                 readDatabase();
             }
         }.start();
-
-
     }
 
     private void readDatabase() {
@@ -59,6 +57,23 @@ public class MainActivity extends AppCompatActivity implements InputFragment.Car
                     }
                 });
 
+            }
+        }.start();
+    }
+
+    @Override
+    public void updateCarAvailability(Car car) {
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                if(car.getAvailable() == 1){
+                    CarDatabase.getDatabase(MainActivity.this).getCarDAO().updateAvailability(car.getId(),0);
+                }
+                else{
+                    CarDatabase.getDatabase(MainActivity.this).getCarDAO().updateAvailability(car.getId(),1);
+                }
+                readDatabase();
             }
         }.start();
     }

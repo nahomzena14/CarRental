@@ -1,5 +1,6 @@
 package com.example.carrental.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,9 +20,9 @@ import java.util.List;
 
 public class OutputFragment extends Fragment {
 
-
     private OutputFragmentBinding binding;
-    private CarAdapter carAdapter = new CarAdapter(new LinkedList<Car>());
+    private CarAdapter carAdapter;
+    private CarAdapter.CarDelegate carDelegate;
 
     @Nullable
     @Override
@@ -33,10 +34,17 @@ public class OutputFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        carAdapter= new CarAdapter(new LinkedList<Car>(),carDelegate);
         binding.carRecycleView.setAdapter(carAdapter);
         SnapHelper snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(binding.carRecycleView);
+
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        carDelegate = (CarAdapter.CarDelegate) context;
     }
 
     public void updateList(List<Car> cars){
